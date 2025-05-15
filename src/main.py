@@ -218,17 +218,7 @@ class JobAlertSystem:
 
 def main():
     job_alert = JobAlertSystem()
-    
-    # Schedule job checks every 15 minutes
-    schedule.every(15).minutes.do(job_alert.check_jobs)
-    
-    # Run initial check
     job_alert.check_jobs()
-    
-    # Keep the script running
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
 
 if __name__ == "__main__":
     main() 
