@@ -1,9 +1,9 @@
 import os
 
-# Get absolute path to the directory where this script is located
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-LOGS_DIR = os.path.join(BASE_DIR, '../logs')
-DATA_DIR = os.path.join(BASE_DIR, '../data')
+# Use GITHUB_WORKSPACE if available (for GitHub Actions), else use current working directory
+REPO_ROOT = os.environ.get('GITHUB_WORKSPACE', os.getcwd())
+LOGS_DIR = os.path.join(REPO_ROOT, 'logs')
+DATA_DIR = os.path.join(REPO_ROOT, 'data')
 os.makedirs(LOGS_DIR, exist_ok=True)
 os.makedirs(DATA_DIR, exist_ok=True)
 
