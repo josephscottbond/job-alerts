@@ -1,6 +1,12 @@
 import os
-os.makedirs('logs', exist_ok=True)
-os.makedirs('data', exist_ok=True)
+
+# Get absolute path to the directory where this script is located
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+LOGS_DIR = os.path.join(BASE_DIR, '../logs')
+DATA_DIR = os.path.join(BASE_DIR, '../data')
+os.makedirs(LOGS_DIR, exist_ok=True)
+os.makedirs(DATA_DIR, exist_ok=True)
+
 import json
 import time
 import logging
@@ -17,7 +23,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('logs/job_alerts.log'),
+        logging.FileHandler(os.path.join(LOGS_DIR, 'job_alerts.log')),
         logging.StreamHandler()
     ]
 )
@@ -27,7 +33,7 @@ load_dotenv()
 
 class JobAlertSystem:
     def __init__(self):
-        self.seen_jobs_file = 'data/seen_jobs.json'
+        self.seen_jobs_file = os.path.join(DATA_DIR, 'seen_jobs.json')
         self.seen_jobs = self._load_seen_jobs()
         self.job_title = os.getenv('JOB_TITLE', 'Software Engineer')
         self.location = os.getenv('LOCATION', 'San Francisco')
@@ -37,10 +43,6 @@ class JobAlertSystem:
         self.slack_token = os.getenv('SLACK_TOKEN')
         self.slack_channel = os.getenv('SLACK_CHANNEL', '#job-alerts')
         self.slack_client = WebClient(token=self.slack_token) if self.slack_token else None
-        
-        # Create necessary directories
-        os.makedirs('logs', exist_ok=True)
-        os.makedirs('data', exist_ok=True)
 
     def _load_seen_jobs(self):
         """Load previously seen jobs from JSON file."""
